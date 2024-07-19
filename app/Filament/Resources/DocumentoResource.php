@@ -1,25 +1,20 @@
 <?php
-
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DocumentoResource\Pages;
-use App\Filament\Resources\DocumentoResource\RelationManagers;
 use App\Models\Documento;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\Action as TableAction;
 
 class DocumentoResource extends Resource
 {
     protected static ?string $model = Documento::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document';
 
-    public static function form(Form $form): Form
+    public static function form(Forms\Form $form): Forms\Form
     {
         return $form
             ->schema([
@@ -32,41 +27,24 @@ class DocumentoResource extends Resource
                 Forms\Components\TextInput::make('placa')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\FileUpload::make('excel')
-                    ->label('Cargar Archivo Excel')
-                    ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])
-                    ->required(),
-                Forms\Components\FileUpload::make('zip')
-                    ->label('Cargar Archivo Zip')
-                    ->acceptedFileTypes(['application/zip'])
-                    ->required(),
             ]);
     }
 
-    public static function table(Table $table): Table
+    public static function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('nrodocumento'),
+                Tables\Columns\TextColumn::make('nombre'),
+                Tables\Columns\TextColumn::make('placa'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                TableAction::make('edit'),
+                TableAction::make('delete'),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
